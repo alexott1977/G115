@@ -1,4 +1,6 @@
 import { normalizeOpenAipAirport, type OpenAipAirport, type OpenAipAirportList } from "../src/flight-data/openAip";
+import { openAipSearchVariants } from "../src/flight-data/openAipSearch";
+export { openAipSearchVariants };
 import {
   normalizeOpenMeteoCurrent,
   normalizeOpenMeteoForecast,
@@ -125,18 +127,6 @@ export function nearestForecastHour(value: string) {
   if (!Number.isFinite(date.getTime())) return null;
   date.setUTCMinutes(date.getUTCMinutes() >= 30 ? 60 : 0, 0, 0);
   return date.toISOString().slice(0, 13) + ":00";
-}
-
-export function openAipSearchVariants(search: string) {
-  const variants = [
-    search,
-    search.normalize("NFD").replace(/\p{Diacritic}/gu, ""),
-    search.replace(/ä/gi, (value) => value === "Ä" ? "Ae" : "ae")
-      .replace(/ö/gi, (value) => value === "Ö" ? "Oe" : "oe")
-      .replace(/ü/gi, (value) => value === "Ü" ? "Ue" : "ue")
-      .replace(/ß/g, "ss"),
-  ];
-  return [...new Set(variants.map((value) => value.trim()).filter(Boolean))];
 }
 
 export async function handleApiRequest(request: Request, env: Env, context: WorkerContext) {
